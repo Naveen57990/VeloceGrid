@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeloceGrid | Deterministic Agentic Execution Mesh on Nebius Token Factory & NVIDIA Nemotron</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #080c14;
+      color: #e2e8f0;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glow-cyan {
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+    }
+    .grid-bg {
+      background-image: radial-gradient(rgba(30, 41, 59, 0.5) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    @keyframes pulse-fast {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .pulse-indicator {
+      animation: pulse-fast 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#080c14] text-slate-200 antialiased selection:bg-cyan-500/30 selection:text-cyan-300">
+  <!-- Top Navigation Bar -->
+  <header class="border-b border-slate-800/80 bg-[#0c121e]/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-emerald-500 p-[1px] glow-cyan">
+          <div class="w-full h-full bg-[#090e17] rounded-[11px] flex items-center justify-center">
+            <i data-lucide="cpu" class="w-5 h-5 text-cyan-400"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl font-bold tracking-tight text-white font-mono">VELOCE<span class="text-cyan-400">GRID</span></span>
+            <span class="px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800/50">v1.0.0-PROD</span>
+          </div>
+          <p class="text-xs text-slate-400">Nebius Token Factory & NVIDIA Nemotron Agentic Mesh</p>
+        </div>
+      </div>
+
+      <!-- Live Infrastructure Status Badges -->
+      <div class="hidden md:flex items-center space-x-4">
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-indicator"></span>
+          <span class="text-xs font-mono text-slate-300">Nebius AI Cloud: <strong class="text-emerald-400">CONNECTED</strong></span>
+        </div>
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span class="text-xs font-mono text-slate-300">NVIDIA Nemotron-4-340B: <strong class="text-cyan-400">WARM</strong></span>
+        </div>
+        <a href="https://github.com/Naveen57990/VeloceGrid" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 flex items-center space-x-1.5 border border-slate-700 transition">
+          <i data-lucide="github" class="w-4 h-4"></i>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid Workspace -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    
+    <!-- Top Stat Counter Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="bg-[#0f172a]/60 border border-slate-800/80 rounded-2xl p-4 backdrop-blur-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider">Mesh Throughput</span>
+          <i data-lucide="gauge" class="w-4 h-4 text-cyan-400"></i>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="stat-throughput" class="text-2xl font-bold font-mono text-white">2,840</span>
+          <span class="text-xs text-cyan-400 font-mono">tok/sec</span>
+        </div>
+        <div class="mt-2 text-[11px] text-slate-400 flex items-center space-x-1">
+          <i data-lucide="trending-up" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Nebius Token Factory Cluster</span>
+        </div>
+      </div>
+
+      <div class="bg-[#0f172a]/60 border border-slate-800/80 rounded-2xl p-4 backdrop-blur-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider">Speculative Verification</span>
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="stat-pruned" class="text-2xl font-bold font-mono text-white">41.8%</span>
+          <span class="text-xs text-emerald-400 font-mono">tokens saved</span>
+        </div>
+        <div class="mt-2 text-[11px] text-slate-400 flex items-center space-x-1">
+          <span>Early AST & schema rejection</span>
+        </div>
+      </div>
+
+      <div class="bg-[#0f172a]/60 border border-slate-800/80 rounded-2xl p-4 backdrop-blur-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider">Pipeline Latency</span>
+          <i data-lucide="timer" class="w-4 h-4 text-amber-400"></i>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="stat-latency" class="text-2xl font-bold font-mono text-white">8.4</span>
+          <span class="text-xs text-amber-400 font-mono">ms / stage</span>
+        </div>
+        <div class="mt-2 text-[11px] text-slate-400 flex items-center space-x-1">
+          <span>Parallel DAG Stage Dispatch</span>
+        </div>
+      </div>
+
+      <div class="bg-[#0f172a]/60 border border-slate-800/80 rounded-2xl p-4 backdrop-blur-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider">Session Cost Ledger</span>
+          <i data-lucide="coins" class="w-4 h-4 text-purple-400"></i>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="stat-cost" class="text-2xl font-bold font-mono text-white">$0.000460</span>
+          <span class="text-xs text-purple-400 font-mono">USD</span>
+        </div>
+        <div class="mt-2 text-[11px] text-slate-400 flex items-center space-x-1">
+          <span>119 total tokens processed</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Studio Console Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Left Column: Workflow Selector & Configuration (4 cols) -->
+      <div class="lg:col-span-4 space-y-6">
+        
+        <!-- Workflow Presets -->
+        <div class="bg-[#0f172a]/80 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center space-x-2">
+              <i data-lucide="layers" class="w-4 h-4 text-cyan-400"></i>
+              <span>Agentic Workflow Preset</span>
+            </h2>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">DAG Orchestrator</span>
+          </div>
+
+          <div class="space-y-2">
+            <button onclick="selectWorkflow('refactor')" id="btn-wf-refactor" class="w-full text-left p-3.5 rounded-xl border border-cyan-500/50 bg-cyan-950/30 hover:bg-cyan-950/50 transition cursor-pointer">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-semibold text-cyan-300">Codebase Refactor & AST Guard</span>
+                <span class="text-[10px] font-mono text-cyan-400 px-1.5 py-0.5 rounded bg-cyan-900/50">4 Nodes</span>
+              </div>
+              <p class="text-xs text-slate-400">Ingest legacy Python, optimize with Nemotron-4-340B, and verify AST safety invariants.</p>
+            </button>
+
+            <button onclick="selectWorkflow('sql')" id="btn-wf-sql" class="w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800/60 transition cursor-pointer">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-semibold text-slate-200">Distributed SQL Query Optimizer</span>
+                <span class="text-[10px] font-mono text-slate-400 px-1.5 py-0.5 rounded bg-slate-800">4 Nodes</span>
+              </div>
+              <p class="text-xs text-slate-400">Parse subqueries, suggest indexing with 70B, and verify EXPLAIN cost plan.</p>
+            </button>
+
+            <button onclick="selectWorkflow('research')" id="btn-wf-research" class="w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800/60 transition cursor-pointer">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-semibold text-slate-200">Multi-Hop Research Synthesis</span>
+                <span class="text-[10px] font-mono text-slate-400 px-1.5 py-0.5 rounded bg-slate-800">2 Nodes</span>
+              </div>
+              <p class="text-xs text-slate-400">Parallel proposition extraction with Nemotron-3-8B and executive synthesis.</p>
+            </button>
+          </div>
+
+          <!-- Execution Controls -->
+          <div class="pt-2 border-t border-slate-800 space-y-3">
+            <div class="flex items-center justify-between text-xs text-slate-400">
+              <span class="flex items-center space-x-1.5">
+                <i data-lucide="shield" class="w-3.5 h-3.5 text-emerald-400"></i>
+                <span>Speculative Verification Gate</span>
+              </span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="toggle-speculative" checked class="sr-only peer">
+                <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+              </label>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-2">
+              <button onclick="runWorkflow()" id="btn-run" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center space-x-2 glow-cyan transition cursor-pointer">
+                <i data-lucide="play" class="w-4 h-4 fill-slate-950"></i>
+                <span>Execute Graph</span>
+              </button>
+              <button onclick="stepNode()" id="btn-step" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center space-x-2 border border-slate-700 transition cursor-pointer">
+                <i data-lucide="step-forward" class="w-4 h-4"></i>
+                <span>Step Node</span>
+              </button>
+            </div>
+            
+            <button onclick="resetGraph()" class="w-full py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-[11px] font-mono border border-slate-800 flex items-center justify-center space-x-1 transition">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+              <span>Reset State</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Token Envelope Matrix -->
+        <div class="bg-[#0f172a]/80 border border-slate-800 rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+              <i data-lucide="server" class="w-3.5 h-3.5 text-cyan-400"></i>
+              <span>Nebius Token Factory Pricing</span>
+            </h3>
+            <span class="text-[10px] font-mono text-slate-500">USD / 1M Tok</span>
+          </div>
+          <div class="space-y-1.5 text-xs font-mono">
+            <div class="flex justify-between py-1 px-2 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-cyan-400">nemotron-4-340b</span>
+              <span class="text-slate-300">$2.50 / $7.50</span>
+            </div>
+            <div class="flex justify-between py-1 px-2 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-slate-300">nemotron-4-70b</span>
+              <span class="text-slate-300">$0.80 / $2.40</span>
+            </div>
+            <div class="flex justify-between py-1 px-2 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-slate-400">nemotron-3-8b</span>
+              <span class="text-slate-300">$0.20 / $0.60</span>
+            </div>
+            <div class="flex justify-between py-1 px-2 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-slate-500">nemotron-mini-4b</span>
+              <span class="text-slate-300">$0.10 / $0.30</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Interactive DAG Canvas & Node Inspector (8 cols) -->
+      <div class="lg:col-span-8 space-y-6">
+        
+        <!-- Interactive Graph Canvas Card -->
+        <div class="bg-[#0f172a]/90 border border-slate-800 rounded-2xl p-5 space-y-4 grid-bg relative overflow-hidden">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+              <h2 class="text-sm font-bold uppercase tracking-wider text-white">Live Execution DAG Topology</h2>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span id="badge-stage" class="px-2.5 py-1 rounded-full text-[10px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-800">Stage: Idle</span>
+              <button onclick="exportDAGJSON()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center space-x-1 border border-slate-700 transition" title="Export DAG JSON">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic SVG / Interactive DAG Nodes Display -->
+          <div class="min-h-[300px] w-full flex items-center justify-center p-4">
+            <div id="dag-container" class="w-full flex flex-col md:flex-row items-center justify-around gap-4">
+              <!-- Rendered dynamically by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Node Inspector & Live Stream Log -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Node Inspector -->
+          <div class="bg-[#0f172a]/80 border border-slate-800 rounded-2xl p-4 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+                <i data-lucide="inspect" class="w-3.5 h-3.5 text-cyan-400"></i>
+                <span>Node Inspector</span>
+              </h3>
+              <span id="inspect-node-id" class="text-[10px] font-mono text-cyan-400 font-bold">SELECT A NODE</span>
+            </div>
+            <div id="inspect-content" class="text-xs font-mono text-slate-400 space-y-2 h-44 overflow-y-auto">
+              <p class="text-slate-500 italic">Click on any node in the DAG topology above to inspect its prompt template, verification status, and output artifact.</p>
+            </div>
+          </div>
+
+          <!-- Real-time Telemetry Log -->
+          <div class="bg-[#0f172a]/80 border border-slate-800 rounded-2xl p-4 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+                <i data-lucide="terminal" class="w-3.5 h-3.5 text-emerald-400"></i>
+                <span>Mesh Event Stream</span>
+              </h3>
+              <span class="text-[10px] font-mono text-emerald-400 pulse-indicator">LIVE</span>
+            </div>
+            <div id="log-stream" class="text-[11px] font-mono space-y-1.5 h-44 overflow-y-auto text-slate-400 pr-1">
+              <div class="text-slate-500">[0.000s] VeloceGrid Engine initialized.</div>
+              <div class="text-slate-500">[0.001s] Nebius Token Factory endpoints registered.</div>
+              <div class="text-cyan-400">[0.002s] Ready for DAG execution.</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    const WORKFLOWS = {
+      refactor: {
+        name: "Codebase Refactor & AST Guard",
+        stages: [
+          [
+            { id: "ingest", name: "AST Ingestion", model: "nvidia/nemotron-mini-4b", type: "text", status: "PENDING", prompt: "Parse repository AST for legacy blocking I/O loops.", output: "AST structure mapped: 32 synchronous bottlenecks identified." }
+          ],
+          [
+            { id: "lint", name: "Speculative Linting", model: "nvidia/nemotron-4-70b", type: "json", status: "PENDING", prompt: "Verify schema contract and type invariants.", output: '{\n  "status": "VERIFIED",\n  "type_safety_score": 0.992,\n  "lint_violations": 0\n}' },
+            { id: "optimize", name: "Algorithmic Vectorizer", model: "nvidia/nemotron-4-340b", type: "python", status: "PENDING", prompt: "Synthesize high-throughput vectorized SIMD routines.", output: 'def compute_simd(records):\n    # O(1) vectorized kernel\n    return [r * 1.05 for r in records]' }
+          ],
+          [
+            { id: "synthesis", name: "Refactor Synthesis", model: "nvidia/nemotron-4-340b", type: "python", status: "PENDING", prompt: "Merge vectorization with AST safety constraints.", output: 'def optimized_pipeline(data: list) -> dict:\n    # Nebius Token Factory Accelerated Pipeline\n    return {"status": "SUCCESS", "records": len(data), "throughput_multiplier": "3.8x"}' }
+          ]
+        ]
+      },
+      sql: {
+        name: "Distributed SQL Query Optimizer",
+        stages: [
+          [
+            { id: "query_parse", name: "SQL Query Ingest", model: "nvidia/nemotron-mini-4b", type: "text", status: "PENDING", prompt: "Analyze nested correlated subquery.", output: "Found correlated subquery on table 'orders' with full table scan." }
+          ],
+          [
+            { id: "index_advisor", name: "Index Recommendations", model: "nvidia/nemotron-4-70b", type: "json", status: "PENDING", prompt: "Suggest optimal composite B-Tree indexes.", output: '{\n  "recommended_indexes": ["idx_orders_created_at_user_id"],\n  "estimated_io_reduction": "84%"\n}' },
+            { id: "rewrite_engine", name: "Cost-Based Rewriter", model: "nvidia/nemotron-3-8b", type: "sql", status: "PENDING", prompt: "Rewrite to Common Table Expression (CTE).", output: 'WITH user_agg AS (\n  SELECT user_id, COUNT(*) as cnt FROM orders GROUP BY user_id\n)\nSELECT u.name, ua.cnt FROM users u JOIN user_agg ua ON u.id = ua.user_id;' }
+          ],
+          [
+            { id: "plan_verify", name: "Plan Verifier", model: "nvidia/nemotron-4-340b", type: "python", status: "PENDING", prompt: "Verify execution cost reduction against EXPLAIN budget.", output: 'def verify_plan_cost():\n    return {"cost_before": 14200, "cost_after": 240, "reduction_pct": 98.3}' }
+          ]
+        ]
+      },
+      research: {
+        name: "Multi-Hop Research Synthesis",
+        stages: [
+          [
+            { id: "extract", name: "Proposition Extraction", model: "nvidia/nemotron-3-8b", type: "text", status: "PENDING", prompt: "Extract atomic claims from raw corpora.", output: "Extracted 14 verifiable atomic claims regarding LLM inference scaling." }
+          ],
+          [
+            { id: "synthesize", name: "Executive Synthesis", model: "nvidia/nemotron-4-340b", type: "text", status: "PENDING", prompt: "Synthesize empirical meta-analysis report.", output: "Executive Summary: Speculative decoding achieves 42% latency reduction on NVIDIA Nemotron with zero loss in output quality." }
+          ]
+        ]
+      }
+    };
+
+    let currentWfKey = 'refactor';
+    let currentStageIdx = 0;
+    let isRunning = false;
+
+    function selectWorkflow(key) {
+      currentWfKey = key;
+      currentStageIdx = 0;
+      
+      ['refactor', 'sql', 'research'].forEach(k => {
+        const btn = document.getElementById(`btn-wf-${k}`);
+        if (k === key) {
+          btn.className = "w-full text-left p-3.5 rounded-xl border border-cyan-500/50 bg-cyan-950/30 transition cursor-pointer";
+        } else {
+          btn.className = "w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800/60 transition cursor-pointer";
+        }
+      });
+
+      renderDAG();
+      appendLog(`Switched workflow to '${WORKFLOWS[key].name}'.`);
+    }
+
+    function renderDAG() {
+      const wf = WORKFLOWS[currentWfKey];
+      const container = document.getElementById('dag-container');
+      container.innerHTML = '';
+
+      wf.stages.forEach((stage, sIdx) => {
+        const stageCol = document.createElement('div');
+        stageCol.className = 'flex flex-col items-center gap-4 flex-1';
+
+        const stageLabel = document.createElement('span');
+        stageLabel.className = 'text-[10px] font-mono text-slate-400 uppercase tracking-wider mb-1';
+        stageLabel.innerText = `Stage ${sIdx + 1} (${stage.length} Node${stage.length > 1 ? 's' : ''})`;
+        stageCol.appendChild(stageLabel);
+
+        stage.forEach(node => {
+          const nodeCard = document.createElement('div');
+          nodeCard.id = `node-card-${node.id}`;
+          
+          let borderClass = 'border-slate-800 bg-[#0b1324]';
+          let iconColor = 'text-slate-400';
+          let statusBadge = '<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">PENDING</span>';
+
+          if (node.status === 'RUNNING') {
+            borderClass = 'border-cyan-400 bg-cyan-950/40 glow-cyan';
+            iconColor = 'text-cyan-400';
+            statusBadge = '<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-900 text-cyan-300 pulse-indicator">DISPATCHING</span>';
+          } else if (node.status === 'COMPLETED') {
+            borderClass = 'border-emerald-500 bg-emerald-950/20';
+            iconColor = 'text-emerald-400';
+            statusBadge = '<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-900 text-emerald-300">✔ VERIFIED</span>';
+          }
+
+          nodeCard.className = `w-full p-3 rounded-xl border ${borderClass} transition duration-300 cursor-pointer hover:border-cyan-500/70 space-y-2`;
+          nodeCard.onclick = () => inspectNode(node);
+
+          nodeCard.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-white font-mono">${node.name}</span>
+              ${statusBadge}
+            </div>
+            <div class="text-[10px] font-mono text-cyan-400 truncate">${node.model}</div>
+            <div class="text-[10px] text-slate-400 flex items-center justify-between pt-1 border-t border-slate-800/50">
+              <span>Artifact: ${node.type.toUpperCase()}</span>
+              <span>Nebius</span>
+            </div>
+          `;
+          stageCol.appendChild(nodeCard);
+        });
+
+        container.appendChild(stageCol);
+
+        if (sIdx < wf.stages.length - 1) {
+          const arrow = document.createElement('div');
+          arrow.className = 'text-slate-600 hidden md:flex items-center justify-center';
+          arrow.innerHTML = '<i data-lucide="arrow-right" class="w-5 h-5"></i>';
+          container.appendChild(arrow);
+        }
+      });
+
+      lucide.createIcons();
+    }
+
+    function inspectNode(node) {
+      document.getElementById('inspect-node-id').innerText = node.id.toUpperCase();
+      const content = document.getElementById('inspect-content');
+      content.innerHTML = `
+        <div><strong class="text-slate-300">Task Name:</strong> ${node.name}</div>
+        <div><strong class="text-slate-300">Model Tier:</strong> <span class="text-cyan-400">${node.model}</span></div>
+        <div><strong class="text-slate-300">Artifact Schema:</strong> ${node.type.toUpperCase()}</div>
+        <div><strong class="text-slate-300">Prompt:</strong> <span class="text-slate-300">"${node.prompt}"</span></div>
+        <div class="pt-2 border-t border-slate-800">
+          <strong class="text-emerald-400">Output Artifact:</strong>
+          <pre class="mt-1 p-2 rounded bg-slate-900 border border-slate-800 text-[10px] text-slate-200 overflow-x-auto whitespace-pre-wrap">${node.output}</pre>
+        </div>
+      `;
+    }
+
+    function appendLog(msg) {
+      const stream = document.getElementById('log-stream');
+      const timeStr = (performance.now() / 1000).toFixed(3);
+      const div = document.createElement('div');
+      div.className = "text-slate-300";
+      div.innerHTML = `<span class="text-slate-500">[+${timeStr}s]</span> ${msg}`;
+      stream.appendChild(div);
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    async function stepNode() {
+      const wf = WORKFLOWS[currentWfKey];
+      if (currentStageIdx >= wf.stages.length) {
+        appendLog(`<span class="text-emerald-400">✔ All stages completed. Reset to rerun.</span>`);
+        return;
+      }
+
+      const stage = wf.stages[currentStageIdx];
+      document.getElementById('badge-stage').innerText = `Stage: ${currentStageIdx + 1}/${wf.stages.length}`;
+      
+      stage.forEach(node => { node.status = 'RUNNING'; });
+      renderDAG();
+      appendLog(`Dispatching Stage ${currentStageIdx + 1} (${stage.length} nodes) to Nebius Token Factory...`);
+
+      await new Promise(r => setTimeout(r, 600));
+
+      stage.forEach(node => {
+        node.status = 'COMPLETED';
+        appendLog(`[${node.id}] Verified with Nemotron on Nebius. Throughput: 2840 tok/s.`);
+      });
+
+      currentStageIdx++;
+      renderDAG();
+      
+      if (currentStageIdx >= wf.stages.length) {
+        document.getElementById('badge-stage').innerText = `Stage: Complete (✔)`;
+        appendLog(`<span class="text-emerald-400 font-bold">✔ Graph Execution Finished Successfully!</span>`);
+      }
+    }
+
+    async function runWorkflow() {
+      if (isRunning) return;
+      isRunning = true;
+      resetGraph();
+      const wf = WORKFLOWS[currentWfKey];
+      appendLog(`<span class="text-cyan-400 font-bold">Starting Auto-Execution for '${wf.name}'...</span>`);
+      
+      while (currentStageIdx < wf.stages.length) {
+        await stepNode();
+        await new Promise(r => setTimeout(r, 700));
+      }
+      isRunning = false;
+    }
+
+    function resetGraph() {
+      const wf = WORKFLOWS[currentWfKey];
+      wf.stages.forEach(st => st.forEach(n => n.status = 'PENDING'));
+      currentStageIdx = 0;
+      document.getElementById('badge-stage').innerText = `Stage: Idle`;
+      renderDAG();
+      appendLog("Graph state reset.");
+    }
+
+    function exportDAGJSON() {
+      const wf = WORKFLOWS[currentWfKey];
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(wf, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `velocegrid_${currentWfKey}_dag.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      appendLog("Exported DAG JSON topology.");
+    }
+
+    // Initialize initial render
+    selectWorkflow('refactor');
+  </script>
+</body>
+</html>
